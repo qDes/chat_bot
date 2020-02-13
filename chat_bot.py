@@ -1,5 +1,7 @@
+import dialogflow_v2 as dialogflow
 import logging
 import os
+import uuid
 
 from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -9,6 +11,17 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+
+def fetch_dialogflow_answer(project_id, session_id, text, language_code):
+    session_client = dialogflow.SessionsClient()
+    session = session_client.session_path(project_id, session_id)
+    text_input = dialogflow.types.TextInput(text=text,
+                                            language_code=language_code)
+    query_input = dialogflow.types.QueryInput(text=text_input)
+    response = session_client.detect_intent(session=session,
+                                            query_input=query_input)
+    response_text = response.query_result.fulfillment_text
+    return response_text
 
 
 # Define a few command handlers. These usually take the two arguments bot and
@@ -25,7 +38,15 @@ def help(bot, update):
 
 def echo(bot, update):
     """Echo the user message."""
-    update.message.reply_text(update.message.text)
+    google_project_id = os.environ["GOOGLE_PROJECT_ID"]
+    google_session_id = str(uuid.uuid4())
+    language_code = "ru-RU"
+    user_text = update.message.text
+    reply = fetch_dialogflow_answer(google_project_id, 
+                                    google_session_id,
+                                    user_text,
+                                    language_code)
+    update.message.reply_text(reply)
 
 
 def error(bot, update, error):
