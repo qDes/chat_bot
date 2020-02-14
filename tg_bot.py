@@ -47,6 +47,7 @@ def error(bot, update, error):
 def main():
     load_dotenv()
     tg_token = os.environ["TG_TOKEN"]
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "google-credentials.json"
     """Start the bot."""
     # Create the EventHandler and pass it your bot's token.
     updater = Updater(tg_token)

@@ -23,6 +23,7 @@ def echo(event, vk_api, project_id,
 
 if __name__ == "__main__":
     load_dotenv()
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "google-credentials.json"
     google_project_id = os.environ["GOOGLE_PROJECT_ID"]
     google_session_id = str(uuid.uuid4())
     language_code = "ru-RU"
