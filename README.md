@@ -8,10 +8,37 @@ Python 3.5+ <br>
 pip install -r requirements.txt
 
 ```
-## создать проект dialogflow
-Необходимо в папку проекта добавить файл `google-credentials.json` (https://console.developers.google.com/apis/credentials).
+Бот работает с использованием dialogflow.
+## Настройка dialogflow
 
+Создать проект в [DialogFlow](https://cloud.google.com/dialogflow/docs/quick/setup).<br>
+В папку проекта добавить json-ключ в файл `google-credentials.json` (https://console.developers.google.com/apis/credentials).
 
+Для обучения бота поместите фразы в файл 'questions.json' с следующей структурой и запустите `python3 dialog.py`:
+```json
+    "%title%": {
+        "questions": [
+            "%question1%",
+            "%question2%",
+        ],
+        "answer": "%answer%"
+    },
+```
+Например:
+```json
+    "Устройство на работу": {
+        "questions": [
+            "Как устроиться к вам на работу?",
+            "Как устроиться к вам?",
+            "Как работать у вас?",
+            "Хочу работать у вас",
+            "Возможно-ли устроиться к вам?",
+            "Можно-ли мне поработать у вас?",
+            "Хочу работать редактором у вас"
+        ],
+        "answer": "Если вы хотите устроиться к нам, напишите на почту game-of-verbs@gmail.com мини-эссе о себе и прикрепите ваше портфолио."
+    },
+```
 ### Переменные окружения
 Для запуска необходимо указать переменные окружения в файле `.env`:
 
