@@ -3,6 +3,7 @@ import os
 import uuid
 
 from dotenv import load_dotenv
+from log_tools import TelegramLogsHandler
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from dialog import fetch_dialogflow_answer
 
@@ -18,7 +19,7 @@ logger = logging.getLogger("chat_bot")
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
     """Send a message when the command /start is issued."""
-    update.message.reply_text('Hi!')
+    update.message.reply_text('Привет! Я бот помощник. Задавайте свои вопросы.')
 
 
 def help(bot, update):
@@ -47,8 +48,12 @@ def error(bot, update, error):
 def main():
     load_dotenv()
     tg_token = os.environ["TG_TOKEN"]
+    chat_id = os.environ['TELEGRAM_CHAT_ID']
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "google-credentials.json"
+    logger.setLevel(logging.INFO)
+    logger.addHandler(TelegramLogsHandler(tg_token, chat_id))
     """Start the bot."""
+    logger.info("start tg chat bot")
     # Create the EventHandler and pass it your bot's token.
     updater = Updater(tg_token)
 
