@@ -11,19 +11,20 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 
 logger = logging.getLogger("chat_bot")
 
-def echo(event, vk_api, project_id,
+
+def reply(event, vk_api, project_id,
          session_id, language_code):
     reply, fallback = fetch_dialogflow_answer(project_id, session_id,
                                               event.text,
                                               language_code)
-    if not fallback:
-        vk_api.messages.send(
-            user_id=event.user_id,
-            message=reply,
-            random_id=random.randint(1, 1000)
-        )
-    else:
+    if fallback:
         logger.info("Бот не может ответить пользователю.")
+        return
+    vk_api.messages.send(
+        user_id=event.user_id,
+        message=reply,
+        random_id=random.randint(1, 1000)
+    )
 
 
 if __name__ == "__main__":
@@ -35,6 +36,7 @@ if __name__ == "__main__":
     google_session_id = str(uuid.uuid4())
     language_code = "ru-RU"
     vk_token = os.environ["VK_TOKEN"]
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger.setLevel(logging.INFO)
     logger.addHandler(TelegramLogsHandler(tg_token, chat_id))
     logger.info("start vk chat bot")
@@ -44,5 +46,5 @@ if __name__ == "__main__":
 
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            echo(event, vk_api, google_project_id,
-                 google_session_id, language_code)
+            reply(event, vk_api, google_project_id,
+                  google_session_id, language_code)
