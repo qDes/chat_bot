@@ -31,8 +31,8 @@ def make_intent(name, phrases):
         "messages": [{"text": {"text": [phrases.get('answer')]}}],
         "training_phrases": [],
     }
-    for phrase in phrases.get('questions'):
-        intent["training_phrases"].append({"parts": [{"text": phrase}]})
+    intet["training_pharses"] = [{"parts": [{"text": phrase}]} for
+            phrase in phrases.get('guestions')]
     return intent
 
 
@@ -40,9 +40,7 @@ def fetch_intents(project_id):
     intents_client = dialogflow.IntentsClient()
     parent = intents_client.project_agent_path(project_id)
     intents = intents_client.list_intents(parent)
-    result = []
-    for intent in intents:
-        result.append(intent.display_name)
+    result = [intent.display_name for intent in intents]
     return result
 
 
@@ -62,7 +60,6 @@ def create_intents(project_id, filename):
 if __name__ == "__main__":
     load_dotenv()
     project_id = os.environ["GOOGLE_PROJECT_ID"]
-    session_id = str(uuid.uuid4())
     texts = ["Как устроиться на работу"]
     language_code = "ru-RU"
     create_intents(project_id, "questions.json")
