@@ -1,7 +1,7 @@
+import argparse
 import dialogflow_v2 as dialogflow
 import json
 import os
-import uuid
 
 from dotenv import load_dotenv
 
@@ -31,8 +31,8 @@ def make_intent(name, phrases):
         "messages": [{"text": {"text": [phrases.get('answer')]}}],
         "training_phrases": [],
     }
-    intet["training_pharses"] = [{"parts": [{"text": phrase}]} for
-            phrase in phrases.get('guestions')]
+    intent["training_pharses"] = [{"parts": [{"text": phrase}]} for
+                                  phrase in phrases.get('guestions')]
     return intent
 
 
@@ -57,9 +57,18 @@ def create_intents(project_id, filename):
         print(response)
 
 
+def get_args():
+    parser = argparse.ArgumentParser(description="dialogflow learner")
+    parser.add_argument('-f', help='filename')
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
+    args = get_args()
+    filename = args.f
     load_dotenv()
     project_id = os.environ["GOOGLE_PROJECT_ID"]
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "google-credentials.json"
     texts = ["Как устроиться на работу"]
     language_code = "ru-RU"
-    create_intents(project_id, "questions.json")
+    create_intents(project_id, filename)
