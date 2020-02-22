@@ -14,7 +14,7 @@ pip install -r requirements.txt
 Создать проект в [DialogFlow](https://cloud.google.com/dialogflow/docs/quick/setup).<br>
 В папку проекта добавить json-ключ в файл `google-credentials.json` (https://console.developers.google.com/apis/credentials).
 
-Для обучения бота поместите фразы в файл 'questions.json' с следующей структурой и запустите `python3 dialog.py`:
+Для обучения бота поместите фразы в файл с следующей структурой и запустите `python3 dialog.py`:
 ```json
     "%title%": {
         "questions": [
@@ -48,7 +48,10 @@ pip install -r requirements.txt
 `GOOGLE_PROJECT_ID` = %project_id% - ID google проекта с dialogflow <br>
 
 ## Обучение 
-
+Запуск обучения бота:
+```bash
+python3 dialog.py -f questions.json
+```
 ## Использование
 Запуск ботов:
 ```
